@@ -3,8 +3,8 @@
   become: yes
   
   tasks:
-    - name: Uninstall testpackage and sync apt index 
+    - name: install nginx
       apt:
-       name: testpackage
-       state: absent
+       name: nginx
+       state: present
        update_cache: yes
