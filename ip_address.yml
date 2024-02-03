@@ -1,18 +1,16 @@
 ---
-- hosts: localhost
-  connection: local
-  
+- name: Example Playbook with ipaddr filter
+  hosts: localhost
+  gather_facts: false
   vars:
-    ipgw: 10.10.0.1
-    ipnm: 255.255.255.224
-  
+    ip_address: "192.168.1.1"
+
   tasks:
-  - set_fact: ip1="{{ipgw}}/{{ipnm}}"
-  - set_fact: ip2="{{ip1|ipaddr('network/prefix')}}"
-  - debug:
-        msg: "Our network is {{ip2}}, gateway is {{ipgw}}"
-  
-  - set_fact: ip3="{{ipgw|ipaddr('int') + 1}}"
-  - set_fact: ip4="{{ip3|ipv4('address')}}/{{ip2|ipaddr('prefix')}}"  
-  - debug:
-        msg: "The next host address is: {{ip4}}"
+    - name: Extract network address from the IP
+      debug:
+        msg: "{{ ip_address | ipaddr('network') }}"
+
+    - name: Check if the IP is in a specific network
+      debug:
+        msg: "IP is in the specified network"
+      when: ip_address | ipaddr('network') == '192.168.1.0/24'
